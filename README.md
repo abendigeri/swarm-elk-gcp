@@ -211,3 +211,60 @@ Login to Kibana and you should see traffic coming into Elasticsearch.
 
 
 ![alt text](https://github.com/dockerworxinc/swarm-elk-gcp/blob/master/kibanaui.png)
+
+
+## 
+
+
+```
+[root@docker-2 swarm-elk]# docker run -d --name nginx-with-syslog --log-driver=syslog --log-opt syslog-address=udp://10.142.0.2:12201 -p 80:80 nginx:alpine
+
+Unable to find image 'nginx:alpine' locally
+alpine: Pulling from library/nginx
+911c6d0c7995: Already exists
+f0ee8b734032: Pull complete
+f8840ac64af5: Pull complete
+9f8c19504ab0: Pull complete
+Digest: sha256:56a9367b64eaef37894842a6f7a19a0ef8e7bd5de964aa844a70b3e2d758033c
+Status: Downloaded newer image for nginx:alpine
+d6b5712045261399249eb2e35d5229cb87b608c519b48517fd034b2d75f15289
+```
+
+```
+[root@docker-2 swarm-elk]# docker ps
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                NAMES
+d6b571204526        nginx:alpine        "nginx -g 'daemon of…"   3 seconds ago       Up 2 seconds        0.0.0.0:80->80/tcp   nginx-with-syslog
+bdf20caf883d        elasticsearch:5     "/docker-entrypoint.…"   19 minutes ago      Up 19 minutes       9200/tcp, 9300/tcp   myelk_elasticsearch.1.cqa5992tty4xkgq10w6c9z7hq
+742f8e93d89c        logstash:alpine     "/docker-entrypoint.…"   19 minutes ago      Up 19 minutes                            myelk_logstash.1.2g55of9anr9xum33g6wovcxud
+[root@docker-2 swarm-elk]#
+```
+
+
+## Pushing data into Logstash:
+
+
+Let us push NGINX web server logs into logstash and see if Kibana is able to detect it:
+
+
+```
+[root@docker-2 swarm-elk]# docker run -d --name nginx-with-syslog --log-driver=syslog --log-opt syslog-address=udp://10.142.0.2:12201 -p 80:80 nginx:alpine
+Unable to find image 'nginx:alpine' locally
+alpine: Pulling from library/nginx
+911c6d0c7995: Already exists
+f0ee8b734032: Pull complete
+f8840ac64af5: Pull complete
+9f8c19504ab0: Pull complete
+Digest: sha256:56a9367b64eaef37894842a6f7a19a0ef8e7bd5de964aa844a70b3e2d758033c
+Status: Downloaded newer image for nginx:alpine
+d6b5712045261399249eb2e35d5229cb87b608c519b48517fd034b2d75f15289
+[root@docker-2 swarm-elk]# docker ps
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                NAMES
+d6b571204526        nginx:alpine        "nginx -g 'daemon of…"   3 seconds ago       Up 2 seconds        0.0.0.0:80->80/tcp   nginx-with-syslog
+bdf20caf883d        elasticsearch:5     "/docker-entrypoint.…"   19 minutes ago      Up 19 minutes       9200/tcp, 9300/tcp   myelk_elasticsearch.1.cqa5992tty4xkgq10w6c9z7hq
+742f8e93d89c        logstash:alpine     "/docker-entrypoint.…"   19 minutes ago      Up 19 minutes                            myelk_logstash.1.2g55of9anr9xum33g6wovcxud
+[root@docker-2 swarm-elk]#
+```
+
+![alt text](https://github.com/dockerworxinc/swarm-elk-gcp/blob/master/kibanaui1.png)
+
+
