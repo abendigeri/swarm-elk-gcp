@@ -209,3 +209,5 @@ docker run --rm -it --log-driver=gelf --log-opt gelf-address=udp://<logstash-hos
 
 Login to Kibana and you should see traffic coming into Elasticsearch.
 
+
+![alt text](https://github.com/dockerworxinc/swarm-elk-gcp/blob/master/kibanaui.png)
