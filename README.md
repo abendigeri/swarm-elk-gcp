@@ -74,10 +74,16 @@ Complete!
 
 ```
 
-## Installing the latest Docker version
+## Installing the latest Docker version on all the nodes
 
 ```
 curl -sSL https://test.docker.com/ | sh
+```
+
+## Starting Docker Service on all the nodes
+
+```
+systemctl restart docker
 ```
 
 ## Verify the Docker version
@@ -133,13 +139,38 @@ docker swarm join \
 ## Listing out Docker Swarm Node Cluster Nodes
 
 ```
-docker node ls
-ID                           HOSTNAME  STATUS  AVAILABILITY  MANAGER STATUS
-3jed9xgpj0ypqxlue3itpa8yt    docker-3  Ready   Active
-f2ldl9dxry8rz3fdv5mjgd0qr *  docker-2  Ready   Active        Leader
-jia581rkhqckbibfu33z5jx84    docker-1  Ready   Active
-[root@docker-2 docker]#
+[root@docker-2 swarm-elk]# docker node ls
+ID                            HOSTNAME            STATUS              AVAILABILITY        MANAGER STATUS      ENGINE VERSION
+7vexu33mevck5pj98c4sh52nw     docker-1            Ready               Active                                  18.06.0-ce-rc2
+jeh0qsb04iby7ldp6i8dr4qr3 *   docker-2            Ready               Active              Leader              18.06.0-ce-rc2
+jw6nqxap0cyycjhmgmqg8bukx     docker-3            Ready               Active                                  18.06.0-ce-rc2
+[root@docker-2 swarm-elk]#
 ```
 
 ## 
+
+```
+[root@docker-2 swarm-elk]# docker stack deploy -c docker-compose.yml myelk
+Ignoring unsupported options: ulimits
+
+Creating network myelk_elk
+Creating service myelk_elasticsearch
+Creating service myelk_kibana
+Creating service myelk_logstash
+[root@docker-2 swarm-elk]# docker stack ls
+NAME                SERVICES            ORCHESTRATOR
+myelk               3                   Swarm
+
+```
+
+
+## Listing out ELK services
+
+```
+ID                  NAME                  MODE                REPLICAS            IMAGE               PORTS
+6fknkzsdbrke        myelk_elasticsearch   replicated          1/1                 elasticsearch:5
+vzijhhjih1sk        myelk_kibana          replicated          1/1                 kibana:latest       *:5601->5601/tcp
+joak42efqt1f        myelk_logstash        replicated          2/2                 logstash:alpine     *:10514->10514/tcp, *:10514->10514/udp, *:12201->12201/udp
+[root@docker-2 swarm-elk]# curl 10.142.0.2:9200
+```
 
