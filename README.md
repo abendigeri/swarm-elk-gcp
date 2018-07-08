@@ -199,3 +199,13 @@ joak42efqt1f        myelk_logstash        replicated          2/2               
 [root@docker-2 swarm-elk]#
 ```
 
+## Testing The Logstash
+
+Run the following container:
+
+```
+docker run --rm -it --log-driver=gelf --log-opt gelf-address=udp://<logstash-host>:12201 alpine ping 8.8.8.8
+```
+
+Login to Kibana and you should see traffic coming into Elasticsearch.
+
