@@ -10,6 +10,101 @@
 35.237.187.239 => 10.142.0.4
 ```
 
+## Remove old Docker 1.13 version from your GCP instances
+
+
+```
+[root@docker-3 docker]# yum remove docker docker-common docker-selinux docker-engine
+Failed to set locale, defaulting to C
+Loaded plugins: fastestmirror
+No Match for argument: docker-engine
+Resolving Dependencies
+--> Running transaction check
+---> Package container-selinux.noarch 2:2.55-1.el7 will be erased
+---> Package docker.x86_64 2:1.13.1-63.git94f4240.el7.centos will be erased
+---> Package docker-common.x86_64 2:1.13.1-63.git94f4240.el7.centos will be erased
+--> Processing Dependency: docker-common for package: 2:docker-client-1.13.1-63.git94f4240.el7.centos.x86_64
+--> Running transaction check
+---> Package docker-client.x86_64 2:1.13.1-63.git94f4240.el7.centos will be erased
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+================================================================================
+ Package            Arch    Version                              Repository
+                                                                           Size
+================================================================================
+Removing:
+ container-selinux  noarch  2:2.55-1.el7                         @extras   36 k
+ docker             x86_64  2:1.13.1-63.git94f4240.el7.centos    @extras   57 M
+ docker-common      x86_64  2:1.13.1-63.git94f4240.el7.centos    @extras  4.5 k
+Removing for dependencies:
+ docker-client      x86_64  2:1.13.1-63.git94f4240.el7.centos    @extras   13 M
+
+Transaction Summary
+================================================================================
+Remove  3 Packages (+1 Dependent package)
+
+Installed size: 70 M
+Is this ok [y/N]: y
+Downloading packages:
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+  Erasing    : 2:docker-1.13.1-63.git94f4240.el7.centos.x86_64              1/4
+warning: /etc/sysconfig/docker-storage saved as /etc/sysconfig/docker-storage.rpmsave
+  Erasing    : 2:docker-client-1.13.1-63.git94f4240.el7.centos.x86_64       2/4
+  Erasing    : 2:docker-common-1.13.1-63.git94f4240.el7.centos.x86_64       3/4
+  Erasing    : 2:container-selinux-2.55-1.el7.noarch                        4/4
+  Verifying  : 2:docker-common-1.13.1-63.git94f4240.el7.centos.x86_64       1/4
+  Verifying  : 2:docker-1.13.1-63.git94f4240.el7.centos.x86_64              2/4
+  Verifying  : 2:docker-client-1.13.1-63.git94f4240.el7.centos.x86_64       3/4
+  Verifying  : 2:container-selinux-2.55-1.el7.noarch                        4/4
+
+Removed:
+  container-selinux.noarch 2:2.55-1.el7
+  docker.x86_64 2:1.13.1-63.git94f4240.el7.centos
+  docker-common.x86_64 2:1.13.1-63.git94f4240.el7.centos
+
+Dependency Removed:
+  docker-client.x86_64 2:1.13.1-63.git94f4240.el7.centos
+
+Complete!
+
+```
+
+## Installing the latest Docker version
+
+```
+curl -sSL https://test.docker.com/ | sh
+```
+
+## Verify the Docker version
+
+```
+[root@docker-2 swarm-elk]# docker version
+Client:
+ Version:      18.06.0-ce-rc2
+ API version:  1.38
+ Go version:   go1.10.3
+ Git commit:   a4637b4
+ Built:        Sat Jul  7 00:01:52 2018
+ OS/Arch:      linux/amd64
+ Experimental: false
+
+Server:
+ Engine:
+  Version:      18.06.0-ce-rc2
+  API version:  1.38 (minimum version 1.12)
+  Go version:   go1.10.3
+  Git commit:   a4637b4
+  Built:        Sat Jul  7 00:04:14 2018
+  OS/Arch:      linux/amd64
+  Experimental: false
+[root@docker-2 swarm-elk]
+```
+
 ## Setting up Swarm Manager Node (10.142.0.2)
 
 ```
