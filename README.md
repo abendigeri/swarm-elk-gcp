@@ -172,5 +172,30 @@ ID                  NAME                  MODE                REPLICAS          
 vzijhhjih1sk        myelk_kibana          replicated          1/1                 kibana:latest       *:5601->5601/tcp
 joak42efqt1f        myelk_logstash        replicated          2/2                 logstash:alpine     *:10514->10514/tcp, *:10514->10514/udp, *:12201->12201/udp
 [root@docker-2 swarm-elk]# curl 10.142.0.2:9200
+
+```
+
+## Scaling Elastisearch to 3 instances
+
+```
+[root@docker-2 swarm-elk]# docker service ls
+ID                  NAME                  MODE                REPLICAS            IMAGE               PORTS
+6fknkzsdbrke        myelk_elasticsearch   replicated          1/1                 elasticsearch:5
+vzijhhjih1sk        myelk_kibana          replicated          1/1                 kibana:latest       *:5601->5601/tcp
+joak42efqt1f        myelk_logstash        replicated          2/2                 logstash:alpine     *:10514->10514/tcp, *:10514->10514/udp, *:12201->12201/udp
+
+[root@docker-2 swarm-elk]# docker service update --replicas=3 myelk_elasticsearch
+myelk_elasticsearch
+overall progress: 3 out of 3 tasks
+1/3: running   [==================================================>]
+2/3: running   [==================================================>]
+3/3: running   [==================================================>]
+verify: Service converged
+[root@docker-2 swarm-elk]# docker service ls
+ID                  NAME                  MODE                REPLICAS            IMAGE               PORTS
+6fknkzsdbrke        myelk_elasticsearch   replicated          3/3                 elasticsearch:5
+vzijhhjih1sk        myelk_kibana          replicated          1/1                 kibana:latest       *:5601->5601/tcp
+joak42efqt1f        myelk_logstash        replicated          2/2                 logstash:alpine     *:10514->10514/tcp, *:10514->10514/udp, *:12201->12201/udp
+[root@docker-2 swarm-elk]#
 ```
 
